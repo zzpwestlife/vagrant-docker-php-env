@@ -4,6 +4,8 @@
 
 ### 折腾了两天，备份一下
 
+在 https://github.com/kasperisager/php-dockerized 的基础上修改，感谢
+
 #### 1. 下载配置文件 
 
 ```
