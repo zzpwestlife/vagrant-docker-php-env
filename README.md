@@ -49,11 +49,21 @@ vagrant reload
 vagrant destroy
 ```
 
+
 #### 5. 进入 docker-compose.yml 所在的目录
 
 ```
 cd /home/vagrant/www/docker/php-dockerized
 ```
+
+
+将 daemon.json 复制至 /etc/docker 目录下
+
+```
+sudo cp ../daemon.json /etc/docker/
+```
+
+这个配置文件替换了 docker 镜像的下载源，使用国内的下载源速度会快些
 
 #### 6. 构建镜像
 
@@ -66,6 +76,8 @@ docker-compose build
 ```
 docker-compose up -d
 ```
+
+第一次生成也需要不少时间
 
 #### 8. 在本机增加 hosts 映射
 
