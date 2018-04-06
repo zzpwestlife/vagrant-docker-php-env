@@ -1,0 +1,77 @@
+version: "3"
+
+services:
+  front:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9000:9000"
+    links:
+      - mysql:mysql
+      - mongo:mongo
+      - memcached:memcached
+      - redis:redis
+      - elasticsearch:elasticsearch
+      - rabbitmq:rabbitmq
+    volumes:
+      - ~/www:/var/www
+      - ./sites:/etc/nginx/conf.d
+      - ./logs:/var/log/supervisor
+    networks:
+      - my-bridge  
+
+  mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - my-bridge  
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - my-bridge  
+
+  memcached:
+    image: memcached
+    ports:
+      - "11211:11211"
+    networks:
+      - my-bridge  
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - my-bridge  
+
+  elasticsearch:
+    image: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - my-bridge  
+
+  rabbitmq:
+    image: rabbitmq:3.6.1-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - my-bridge  
+
+volumes:
+  mysql-data:
+
+networks:
+  my-bridge:
+    driver: bridge
