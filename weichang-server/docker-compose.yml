@@ -1,0 +1,50 @@
+fpm:
+    build: ./php
+    links:
+          - "mysql:mysqldb"
+          - "redis:redisdb"
+    volumes:
+          - ~/www:/var/www
+          - ~/.composer:/root/.composer
+         # - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+fpm7:
+    build: ./php7
+    links:
+          - "mysql:mysqldb"
+          - "redis:redisdb"
+    volumes:
+          - ~/www:/var/www
+          - ~/.composer:/root/.composer
+         # - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini          
+nginx:
+    image: 'nginx'
+    ports:
+      - "80:80"
+    volumes:
+        - ./nginx/sites:/etc/nginx/conf.d
+    volumes_from:
+      - fpm
+      - fpm7
+    links:
+      - "fpm"
+      - "fpm7"
+redis:
+    image: 'redis'
+    ports:
+      - "6379:6379"
+    environment:
+      DB_PORT_6379_TCP_ADDR: 0.0.0.0
+rabbitmq:
+    image: 'rabbitmq:3.6.1-management'
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+mysql:
+    image: 'mysql'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
